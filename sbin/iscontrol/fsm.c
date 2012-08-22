@@ -95,6 +95,7 @@ tcpConnect(isess_t *sess)
 	       sess->redirect_cnt++;
 	       sess->flags |= SESS_RECONNECT;
 	  } else
+               return 0;
 	       sleep(2); // XXX: actually should be ?
 #ifdef notyet
 	  {
@@ -214,6 +215,7 @@ tcpConnect(isess_t *sess)
 		    return T1;
 	       }
 	  }
+          return 0;
 	  sleep(5); // for now ...
 	  return T1;
      default:
@@ -414,10 +416,12 @@ supervise(isess_t *sess)
 	  return 0; // failure
 
      if((sess->flags & SESS_FULLFEATURE) == 0) {
+/*          
 	  if(daemon(0, 1) != 0) {
 	       perror("daemon");
 	       exit(1);
 	  }
+*/	  
 	  if(sess->op->pidfile != NULL) {
 	       FILE *pidf;
 
@@ -449,9 +453,9 @@ supervise(isess_t *sess)
 	  }
      }
 	  
-     signal(SIGINT, trap);
+     //signal(SIGINT, trap);
      signal(SIGHUP, trap);
-     signal(SIGTERM, trap);
+     //signal(SIGTERM, trap);
 
      sig = SIGUSR1;
      signal(sig, trap);
